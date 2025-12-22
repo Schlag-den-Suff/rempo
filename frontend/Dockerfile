@@ -1,5 +1,5 @@
 # ---- Builder Stage ----
-FROM node:18-alpine AS builder
+FROM node:25-alpine AS builder
 WORKDIR /build
 
 # Copy package files first for caching
@@ -14,7 +14,7 @@ COPY src ./src
 RUN npm run build
 
 # ---- Runtime Stage ----
-FROM node:18-alpine AS runtime
+FROM node:25-alpine AS runtime
 WORKDIR /frontend
 
 # Copy package files

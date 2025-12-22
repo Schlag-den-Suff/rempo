@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/frontend",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -88,5 +89,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "1aafbdc6-02b8-4603-a93f-675d9e31c478"
   }
 }

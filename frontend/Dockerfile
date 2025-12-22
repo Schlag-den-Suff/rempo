@@ -1,31 +1,27 @@
 # ---- Builder Stage ----
-FROM node:25-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /build
 
-# Copy package files first for caching
+# Copy Angular workspace files
 COPY package*.json ./
-COPY tsconfig.json ./
+COPY angular.json ./
+COPY tsconfig*.json ./
 
 # Install dependencies
 RUN npm ci
 
-# Copy source code and build
+# Copy full source tree
 COPY src ./src
+
+# Build Angular app
 RUN npm run build
 
 # ---- Runtime Stage ----
-FROM node:25-alpine AS runtime
+FROM node:24-alpine AS runtime
 WORKDIR /frontend
 
-# Copy package files
-COPY package*.json ./
-
-# Install production dependencies only
-RUN npm ci --only=production
-
-# Copy compiled output from builder
+# Copy build output only
 COPY --from=builder /build/dist ./dist
-COPY --from=builder /build/node_modules ./node_modules
 
 # Non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 -G nodejs

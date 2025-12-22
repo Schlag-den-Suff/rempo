@@ -6,6 +6,7 @@ This is the Angular frontend for the rempo application built with Angular CLI ve
 
 1. Install Node.js dependencies:
 ```bash
+
 npm install
 ```
 

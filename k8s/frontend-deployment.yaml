@@ -29,11 +29,6 @@ spec:
               value: redis-master
             - name: REDIS_PORT
               value: "6379"
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop: ["ALL"]
           volumeMounts:
             - name: tmp
               mountPath: /tmp

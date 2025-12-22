@@ -19,17 +19,13 @@ FROM node:24-alpine AS runtime
 WORKDIR /frontend
 
 # Copy Angular build output
-COPY --from=builder /build/dist ./dist
+COPY --from=builder /build/dist/frontend ./dist
 
-# Install lightweight static server
 RUN npm install -g serve
 
 # Non-root user
 RUN addgroup -g 1001 -S appuser && adduser -S appuser -u 1001 -G appuser
 USER appuser
 
-# Expose port
 EXPOSE 3000
-
-# Serve Angular app
 CMD ["serve", "-s", "dist", "-l", "3000"]

@@ -1,0 +1,30 @@
+<header id="header">
+  <div class="logo">
+    @if (isLoggedIn) {
+      <mat-icon id="menu-icon" (click)="toggleSidebar()">menu</mat-icon>
+    }
+    <img
+      ngSrc="assets/tempLogo.jpg"
+      alt="Logo"
+      priority
+      tabindex="0"
+      (click)="goToLandingPage()"
+      (keydown.enter)="goToLandingPage()"
+      style="cursor: pointer"
+      height="1181"
+      width="2100" />
+  </div>
+  @if (isLoggedIn) {
+    <div class="custom-dropdown">
+      <mat-icon (click)="toggleDropdown(!isDropdownOpen)" class="account-icon"
+      >account_circle</mat-icon
+      >
+    </div>
+  } @else {
+    <div class="auth-links">
+      <a href="/login">Anmelden</a>
+      <span class="separator">|</span>
+      <a href="/registrieren">Registrieren</a>
+    </div>
+  }
+</header>

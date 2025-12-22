@@ -1,0 +1,21 @@
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* space between fields */
+}
+
+.flex-column mat-form-field {
+  width: 100%; /* makes each field full width */
+}
+
+.full-width {
+  width: 100%;
+}
+
+.flex-row {
+  display: flex;
+  margin-left: auto; /* space between fields */
+  justify-content: flex-end;
+  gap: 16px;
+}
+

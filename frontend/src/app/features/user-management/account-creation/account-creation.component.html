@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="card-container">
+    <div class="card-style flex-row">
+      <div class="flex-column">
+        <img
+          ngSrc="assets/tempLogo.jpg"
+          alt="Logo"
+          height="1181"
+          width="2100"
+          class="logo"
+          priority />
+
+        <div>
+          <h1>Konto erstellen</h1>
+        </div>
+      </div>
+
+      <div>
+        <div id="app-login-field">
+          <div>
+            <app-account-creation-field
+              [group]="creationForm"></app-account-creation-field>
+          </div>
+
+          <div class="flex-row">
+            <button mat-raised-button (click)="onLogin()" class="dark-style">
+              Login
+            </button>
+
+            <button
+              class="right-aligned dark-style"
+              mat-raised-button
+              (click)="onWeiter()"
+              [disabled]="creationForm.invalid">
+              Weiter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Place the link inside the same card-container for alignment -->
+    <div class="right-aligned-link">
+      <a routerLink="/datenschutz">Datenschutzerklärung</a> |
+      <a routerLink="/impressum">Impressum</a>
+    </div>
+  </div>
+</div>

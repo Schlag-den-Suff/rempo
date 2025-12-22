@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-002
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: redis
+    targetRevision: 18.2.0
+    helm:
+      values: |
+        auth:
+          enabled: false
+        replica:
+          replicaCount: 1
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: knowker-prod
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: knowker-frontend-service
+  namespace: knowker-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: knowker-frontend
+  ports:
+    - name: http
+      port: 3001       # The port that should be exposed
+      targetPort: 3000 # Container port of the Node server

@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: knowker-backend-dev
-  namespace: knowker
+  name: knowker-backend
+  namespace: knowker-prod
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: knowker-backend-dev
+      app: knowker-backend
   template:
     metadata:
       labels:
-        app: knowker-backend-dev
+        app: knowker-backend
     spec:
       securityContext:
         runAsNonRoot: true
@@ -20,10 +20,10 @@ spec:
           type: RuntimeDefault
       containers:
         - name: backend
-          image: ghcr.io/knowker-rempo/knowker-backend-dev:0.1
+          image: ghcr.io/knowker-rempo/knowker-backend:0.1
           imagePullPolicy: Always
           ports:
-            - containerPort: 8001
+            - containerPort: 8000
           env:
             - name: REDIS_HOST
               value: redis-master

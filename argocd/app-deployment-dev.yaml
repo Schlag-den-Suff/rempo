@@ -1,19 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: knowker-app
-  namespace: argocd
+  name: knowker-app-dev
+  namespace: argocd-dev
 spec:
   project: default
-
   source:
     repoURL: https://github.com/Knowker-rempo/rempo.git
     targetRevision: HEAD
-    path: k8s
+    path: k8s/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: knowker
-
+    namespace: knowker-dev
   syncPolicy:
     automated:
       prune: true

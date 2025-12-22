@@ -55,17 +55,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build & Push Docker image
         run: |
-          # Tag by commit SHA (safe for Docker)
-          IMAGE_SHA="ghcr.io/knowker-rempo/knowker-frontend:${GITHUB_SHA}"
-          docker build -t "$IMAGE_SHA" frontend
-
-          # Also tag as v0.1
-          IMAGE_TAG="ghcr.io/knowker-rempo/knowker-frontend:v0.1"
-          docker tag "$IMAGE_SHA" "$IMAGE_TAG"
-
-          # Push both tags
-          docker push "$IMAGE_SHA"
-          docker push "$IMAGE_TAG"
-
+          docker build -t ghcr.io/knowker-rempo/knowker-frontend-dev:0.1 frontend
+          docker push ghcr.io/knowker-rempo/knowker-frontend-dev:0.1

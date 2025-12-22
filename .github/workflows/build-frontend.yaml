@@ -1,19 +1,49 @@
-name: Build frontend Image
+name: Build Frontend Image
 
 on:
   push:
     branches: ["main"]
     paths:
-      - 'frontend/**'
+      - "frontend/**"
+      - ".github/**"
 
 permissions:
   contents: read
   packages: write
 
 jobs:
-  build:
+  # ---------------------------
+  # 1. LINTING STAGE
+  # ---------------------------
+  lint:
     runs-on: ubuntu-latest
+    outputs:
+      lint-passed: ${{ steps.eslint.outcome }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Run ESLint
+        id: eslint
+        run: npm run lint
+        working-directory: frontend
+
+  # ---------------------------
+  # 2. BUILD AND PUSH DOCKER IMAGE
+  # ---------------------------
+  build-and-push:
+    needs: lint
+    if: needs.lint.result == 'success'
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,8 +55,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build & Push Frontend
+      - name: Build & Push Docker image
         run: |
           docker build -t ghcr.io/knowker-rempo/knowker-frontend:0.1 frontend
           docker push ghcr.io/knowker-rempo/knowker-frontend:0.1
-

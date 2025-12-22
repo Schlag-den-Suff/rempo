@@ -13,7 +13,7 @@ spec:
         paths:
           - path: /
             pathType: Prefix
-            backend:
+            frontend:
               service:
                 name: knowker-frontend-service
                 port:

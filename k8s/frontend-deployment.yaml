@@ -23,17 +23,15 @@ spec:
           image: ghcr.io/knowker-rempo/knowker-frontend:0.1
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
-          env:
-            - name: REDIS_HOST
-              value: redis-master
-            - name: REDIS_PORT
-              value: "6379"
+            - containerPort: 3000
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           volumeMounts:
             - name: tmp
               mountPath: /tmp
-      imagePullSecrets:
-        - name: ghcr-pull-secret
       volumes:
         - name: tmp
           emptyDir: {}

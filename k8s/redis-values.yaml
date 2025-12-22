@@ -1,0 +1,17 @@
+# redis-values.yaml
+---
+fullnameOverride: redis-service
+architecture: standalone
+
+redis:
+  enabled: true
+
+auth:
+  enabled: false
+
+master:
+  persistence:
+    enabled: false
+
+replica:
+  replicaCount: 2

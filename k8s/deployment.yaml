@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: knowker-app
+  namespace: knowker
+  labels:
+    app: knowker-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: knowker-app
+  template:
+    metadata:
+      labels:
+        app: knowker-app
+    spec:
+      automountServiceAccountToken: false
+      # Pod-level security context to comply with PSS: restricted
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001 # matches the Dockerfile's non-root user uid
+        runAsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: knowker-app
+          image: registry.gitlab.com/devopsenablement1/devopsenablement-q4-25/assessment/assessment-002/knowker-app:ac632a887eab663f0ed89a02f90ef763a6b3c3b3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: AUTHOR_NAME
+              value: "Florian Rittich"
+            - name: APP_INSTANCE
+              value: "frontend-b"
+            # Redis integration per Task 2.3
+            - name: REDIS_HOST
+              value: "redis-master"
+            - name: REDIS_PORT
+              value: "6379"
+          # Container-restricted security
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          # Writable scratch dir since root FS is read-only
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      imagePullSecrets:
+        - name: pull-secret
+      volumes:
+        - name: tmp
+          emptyDir: {}

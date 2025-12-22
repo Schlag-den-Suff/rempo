@@ -14,8 +14,8 @@ spec:
         paths:
           - path: /
             pathType: Prefix
-            backend:
+            frontend:
               service:
-                name: knowker-app-service
+                name: knowker-frontend-service
                 port:
                   number: 3001

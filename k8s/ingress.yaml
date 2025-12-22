@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: knowker-app-ingress
-  namespace: assessment-002
+  namespace: knowker
   labels:
     app: knowker-app
 spec:

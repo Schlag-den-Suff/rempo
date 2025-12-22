@@ -23,14 +23,6 @@ WORKDIR /frontend
 # Copy Angular build output
 COPY --from=builder /build/dist /usr/share/nginx/html
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 -G nodejs \
-    && chown -R nodejs:nodejs /usr/share/nginx/html \
-    && chown -R nodejs:nodejs /var/cache/nginx /var/run /var/log/nginx
-
-# Switch to non-root
-USER nodejs
-
 EXPOSE 80
 
 # Nginx default command still works

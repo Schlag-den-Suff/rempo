@@ -6,6 +6,8 @@ A monorepo application with Angular frontend and Django backend.
 
 ```
 rempo/
+├── argocd/            # argocd deployment
+├── k8s/               # Kubernetes deployment for argocd
 ├── frontend/          # Angular TypeScript application
 ├── backend/           # Django Python application
 ├── .github/

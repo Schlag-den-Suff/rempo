@@ -17,32 +17,21 @@ COPY src ./src
 RUN npm run build
 
 # ---- Runtime Stage ----
-FROM node:24-alpine AS runtime
+FROM nginx:alpine AS runtime
 WORKDIR /frontend
 
-# Copy build output only
+# Copy Angular build output
 COPY --from=builder /build/dist /usr/share/nginx/html
 
-# Non-root user
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 -G nodejs
-RUN chown -R nodejs:nodejs /frontend
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 -G nodejs \
+    && chown -R nodejs:nodejs /usr/share/nginx/html \
+    && chown -R nodejs:nodejs /var/cache/nginx /var/run /var/log/nginx
 
+# Switch to non-root
 USER nodejs
 
-# OCI labels
-LABEL org.opencontainers.image.title="Knowker-Frontend" \
-      org.opencontainers.image.version="0.1.0" \
-      org.opencontainers.image.description="Frontend of the Knowker Application" \
-      org.opencontainers.image.authors="Florian Rittich"
-
-# Environment variables
-ENV PORT=80 \
-    PARTICIPANT_ID=002 \
-    PARTICIPANT_NAME="Florian Rittich" \
-    TEAM_COLOR=blue \
-    APP_INSTANCE=frontend-b \
-    REDIS_HOST=redis-master \
-    REDIS_PORT=6379
-
 EXPOSE 80
+
+# Nginx default command still works
 CMD ["nginx", "-g", "daemon off;"]

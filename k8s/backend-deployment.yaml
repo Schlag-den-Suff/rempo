@@ -13,16 +13,30 @@ spec:
       labels:
         app: knowker-backend
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: backend
           image: ghcr.io/knowker-rempo/knowker-backend:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8000
+            - containerPort: 3000
           env:
-            - name: DJANGO_SETTINGS_MODULE
-              value: backend.settings
             - name: REDIS_HOST
               value: redis-master
             - name: REDIS_PORT
               value: "6379"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

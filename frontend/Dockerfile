@@ -2,16 +2,10 @@
 FROM node:24-alpine AS builder
 WORKDIR /build
 
-# Copy Angular workspace files
 COPY package*.json angular.json tsconfig*.json ./
-
-# Install dependencies
 RUN npm ci
 
-# Copy source code
 COPY src ./src
-
-# Build Angular app
 RUN npm run build
 
 # ---- Runtime Stage ----
@@ -19,7 +13,7 @@ FROM node:24-alpine AS runtime
 WORKDIR /frontend
 
 # Copy Angular build output
-COPY --from=builder /build/dist/frontend ./dist
+COPY --from=builder /build/dist/frontend/browser ./dist
 
 RUN npm install -g serve
 

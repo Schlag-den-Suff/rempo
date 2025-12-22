@@ -21,7 +21,7 @@ FROM node:24-alpine AS runtime
 WORKDIR /frontend
 
 # Copy build output only
-COPY --from=builder /build/dist ./dist
+COPY --from=builder /build/dist /usr/share/nginx/html
 
 # Non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 -G nodejs
@@ -31,12 +31,12 @@ USER nodejs
 
 # OCI labels
 LABEL org.opencontainers.image.title="Knowker-Frontend" \
-      org.opencontainers.image.version="1.0.0" \
+      org.opencontainers.image.version="0.1.0" \
       org.opencontainers.image.description="Frontend of the Knowker Application" \
       org.opencontainers.image.authors="Florian Rittich"
 
 # Environment variables
-ENV PORT=3000 \
+ENV PORT=80 \
     PARTICIPANT_ID=002 \
     PARTICIPANT_NAME="Florian Rittich" \
     TEAM_COLOR=blue \
@@ -44,5 +44,5 @@ ENV PORT=3000 \
     REDIS_HOST=redis-master \
     REDIS_PORT=6379
 
-EXPOSE 3000
-CMD ["node", "dist/server.js"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

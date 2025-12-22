@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: knowker.rd.localhost
+    - host: knowker-dev.rd.localhost
       http:
         paths:
           - path: /

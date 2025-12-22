@@ -3,6 +3,8 @@ name: Build frontend-dev Image
 on:
   push:
     branches: ["dev"]
+    paths:
+      - 'frontend/**'
 
 permissions:
   contents: read

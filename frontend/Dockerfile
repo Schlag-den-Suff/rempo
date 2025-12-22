@@ -18,12 +18,18 @@ RUN npm run build
 
 # ---- Runtime Stage ----
 FROM nginx:alpine AS runtime
-WORKDIR /frontend
 
-# Copy Angular build output
+# Create non-root user
+RUN addgroup -g 1001 -S appuser && adduser -S appuser -u 1001 -G appuser
+
+# Give write permissions to Nginx directories
+RUN mkdir -p /var/cache/nginx /var/run /var/log/nginx \
+    && chown -R appuser:appuser /var/cache/nginx /var/run /var/log/nginx /usr/share/nginx/html
+
+USER appuser
+
+# Copy build
 COPY --from=builder /build/dist /usr/share/nginx/html
 
 EXPOSE 80
-
-# Nginx default command still works
 CMD ["nginx", "-g", "daemon off;"]

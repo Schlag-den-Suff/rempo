@@ -25,5 +25,5 @@ jobs:
 
       - name: Build & Push Backend
         run: |
-          docker build -t ghcr.io/knowker-rempo/knowker-backend:latest backend
-          docker push ghcr.io/knowker-rempo/knowker-backend:latest
+          docker build -t ghcr.io/knowker-rempo/knowker-backend:0.1 backend
+          docker push ghcr.io/knowker-rempo/knowker-backend:0.1

@@ -56,14 +56,15 @@ jobs:
 
       - name: Build Docker image
         run: |
-          # Tag by SHA
-          IMAGE_SHA="ghcr.io/knowker-rempo/knowker-frontend@sha-${GITHUB_SHA}"
+          # Tag by commit SHA (safe for Docker)
+          IMAGE_SHA="ghcr.io/knowker-rempo/knowker-frontend:${GITHUB_SHA}"
           docker build -t "$IMAGE_SHA" frontend
 
-          # Also tag the same image as v0.1
+          # Also tag as v0.1
           IMAGE_TAG="ghcr.io/knowker-rempo/knowker-frontend:v0.1"
           docker tag "$IMAGE_SHA" "$IMAGE_TAG"
 
           # Push both tags
           docker push "$IMAGE_SHA"
           docker push "$IMAGE_TAG"
+

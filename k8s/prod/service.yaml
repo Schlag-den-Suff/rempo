@@ -6,7 +6,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: knowker-frontend
+    app: knowker-frontend-prod
   ports:
     - name: http
       port: 3000       # The port that should be exposed

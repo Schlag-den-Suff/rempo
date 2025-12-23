@@ -29,7 +29,7 @@ Your Django backend should provide these endpoints:
 
 ```
 POST /user/login
-Request: { username: string, email: string, password: string }
+Request: { username: string, password: string }
 Response: { access: string, refresh: string, id: string }
 
 POST /user/register

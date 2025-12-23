@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, switchMap } from 'rxjs/operators';
 
 /**
  * MockBackendService simulates Django backend API responses
@@ -136,6 +136,3 @@ export class MockBackendService {
     return `mock_${type}_token_${timestamp}_${random}`;
   }
 }
-
-// Helper function for switchMap operator
-import { switchMap } from 'rxjs/operators';

@@ -126,7 +126,7 @@ export class AuthService {
     //   )
     //   .subscribe({
     //     next: () => {
-    //       // Remove id, access and refresh tokens after successful logout
+    //       // Remove id, access, refresh tokens, and token_issue_time after successful logout
     //       localStorage.removeItem('id');
     //       localStorage.removeItem('access_token');
     //       localStorage.removeItem('refresh_token');

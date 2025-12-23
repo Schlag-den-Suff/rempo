@@ -215,7 +215,7 @@ export class AuthService {
     // Using mock backend for now
     return this.mockBackend.refreshToken(refreshToken || '').pipe(
       tap(response => {
-        localStorage.setItem('access_token', response.access);
+        this.storeAccessToken(response.access);
       })
     );
     
@@ -224,7 +224,7 @@ export class AuthService {
     //   .post<any>(`${this.apiUrl}/refresh_token/`, { refresh: refreshToken })
     //   .pipe(
     //     tap(response => {
-    //       localStorage.setItem('access_token', response.access);
+    //       this.storeAccessToken(response.access);
     //     })
     //   );
   }

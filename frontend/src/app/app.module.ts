@@ -39,6 +39,8 @@ import {
 } from '@angular/material/expansion';
 import { ResultComponent } from './features/result/result.component';
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
+import { GamesComponent } from './features/games/games.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -58,7 +60,8 @@ export function tokenGetter() {
     AccountCreationComponent,
     LoginFieldComponent,
     AccountCreationFieldComponent,
-    ResultComponent
+    ResultComponent,
+    GamesComponent
   ],
   imports: [
     JwtModule.forRoot({
@@ -99,6 +102,7 @@ export function tokenGetter() {
     MatCard,
     MatDivider,
     MatCardContent,
+    MatSnackBarModule,
   ],
   providers: [
     provideHttpClient(),

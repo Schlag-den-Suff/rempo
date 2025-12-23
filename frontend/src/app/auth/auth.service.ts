@@ -4,12 +4,19 @@ import { environment } from '../../environment/environment';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MockBackendService } from './mock-backend.service';
 
 /**
  * AuthService provides user authentication and authorization functionality,
  * including login, registration, password management, and token handling.
  * This service handles operations such as logging in, logging out,
  * updating passwords, and token refresh for maintaining user sessions.
+ * 
+ * Currently uses MockBackendService to simulate Django backend.
+ * To migrate to real Django backend:
+ * 1. Remove MockBackendService injection
+ * 2. Uncomment HTTP calls and use environment.apiUrl
+ * 3. Update response handling if Django response format differs
  */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,11 +32,13 @@ export class AuthService {
    * @param {HttpClient} http - The HTTP client for making HTTP requests.
    * @param {Router} router - The router service for navigation purposes.
    * @param {MatSnackBar} snackBar - The snack bar service for displaying notifications.
+   * @param {MockBackendService} mockBackend - Mock backend service (temporary, for development)
    */
   constructor(
     private http: HttpClient,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private mockBackend: MockBackendService
   ) {}
 
   /**
@@ -40,13 +49,17 @@ export class AuthService {
    * @returns {Observable<any>} - An observable that resolves with the server response.
    */
   register(userName: string, eMail: string, password: string): Observable<any> {
-    return this.http.post<any>(
-      `${this.apiUrl}/register`,
-      { username: userName, email: eMail, password: password },
-      {
-        observe: 'response',
-      }
-    );
+    // Using mock backend for now
+    return this.mockBackend.register(userName, eMail, password);
+    
+    // TODO: When Django backend is ready, replace above with:
+    // return this.http.post<any>(
+    //   `${this.apiUrl}/register`,
+    //   { username: userName, email: eMail, password: password },
+    //   {
+    //     observe: 'response',
+    //   }
+    // );
   }
 
   /**
@@ -56,14 +69,18 @@ export class AuthService {
    * @returns {Observable<any>} - An observable that resolves with the login response.
    */
   login(userName: string, password: string): Observable<any> {
-    return this.http.post<any>(
-      `${this.apiUrl}/login`,
-      { username: userName, password: password },
-      {
-        observe: 'response',
-        responseType: 'json',
-      }
-    );
+    // Using mock backend for now
+    return this.mockBackend.login(userName, password);
+    
+    // TODO: When Django backend is ready, replace above with:
+    // return this.http.post<any>(
+    //   `${this.apiUrl}/login`,
+    //   { username: userName, password: password },
+    //   {
+    //     observe: 'response',
+    //     responseType: 'json',
+    //   }
+    // );
   }
 
   /**
@@ -71,38 +88,66 @@ export class AuthService {
    * @returns {Promise<void>} - A promise that navigates the user to the home page after logging out.
    */
   logout() {
-    this.http
-      .post<any>(
-        `${this.apiUrl}/logout`,
-        { id: this.getId() },
-        {
-          observe: 'response',
-          responseType: 'json',
+    // Using mock backend for now
+    this.mockBackend.logout(this.getId() || '').subscribe({
+      next: () => {
+        // Remove id, access and refresh tokens after successful logout
+        localStorage.removeItem('id');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('token_issue_time');
+        // Redirect to the landing page
+        if (this.router.url === '/') {
+          // Force page reload if already on
+          window.location.reload();
+        } else {
+          this.router.navigate(['/']);
         }
-      )
-      .subscribe({
-        next: () => {
-          // Remove id, access and refresh tokens after successful logout
-          localStorage.removeItem('id');
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-          // Redirect to the landing page
-          if (this.router.url === '/') {
-            // Force page reload if already on
-            window.location.reload();
-          } else {
-            this.router.navigate(['/']);
-          }
-        },
-        error: () => {
-          // Display error message in case of logout failure
-          this.snackBar.open('Es ist ein Fehler bei der Abmeldung aufgetreten.', 'OK', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          });
-        },
-      });
+      },
+      error: () => {
+        // Display error message in case of logout failure
+        this.snackBar.open('Es ist ein Fehler bei der Abmeldung aufgetreten.', 'OK', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+    });
+    
+    // TODO: When Django backend is ready, replace above with:
+    // this.http
+    //   .post<any>(
+    //     `${this.apiUrl}/logout`,
+    //     { id: this.getId() },
+    //     {
+    //       observe: 'response',
+    //       responseType: 'json',
+    //     }
+    //   )
+    //   .subscribe({
+    //     next: () => {
+    //       // Remove id, access and refresh tokens after successful logout
+    //       localStorage.removeItem('id');
+    //       localStorage.removeItem('access_token');
+    //       localStorage.removeItem('refresh_token');
+    //       localStorage.removeItem('token_issue_time');
+    //       // Redirect to the landing page
+    //       if (this.router.url === '/') {
+    //         // Force page reload if already on
+    //         window.location.reload();
+    //       } else {
+    //         this.router.navigate(['/']);
+    //       }
+    //     },
+    //     error: () => {
+    //       // Display error message in case of logout failure
+    //       this.snackBar.open('Es ist ein Fehler bei der Abmeldung aufgetreten.', 'OK', {
+    //         duration: 3000,
+    //         horizontalPosition: 'center',
+    //         verticalPosition: 'top',
+    //       });
+    //     },
+    //   });
   }
 
   /**
@@ -167,13 +212,21 @@ export class AuthService {
    */
   refreshAccessToken(): Observable<any> {
     const refreshToken = this.getRefreshToken();
-    return this.http
-      .post<any>(`${this.apiUrl}/refresh_token/`, { refresh: refreshToken })
-      .pipe(
-        tap(response => {
-          localStorage.setItem('access_token', response.access);
-        })
-      );
+    // Using mock backend for now
+    return this.mockBackend.refreshToken(refreshToken || '').pipe(
+      tap(response => {
+        localStorage.setItem('access_token', response.access);
+      })
+    );
+    
+    // TODO: When Django backend is ready, replace above with:
+    // return this.http
+    //   .post<any>(`${this.apiUrl}/refresh_token/`, { refresh: refreshToken })
+    //   .pipe(
+    //     tap(response => {
+    //       localStorage.setItem('access_token', response.access);
+    //     })
+    //   );
   }
 
   /**

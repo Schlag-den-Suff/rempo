@@ -1,0 +1,106 @@
+.games-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .games-header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #666;
+    }
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transition: transform 0.2s, box-shadow 0.2s;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      mat-card-header {
+        margin-bottom: 1rem;
+
+        mat-card-title {
+          font-size: 1.5rem;
+          color: #3f51b5;
+        }
+      }
+
+      mat-card-content {
+        flex-grow: 1;
+
+        .game-icon {
+          text-align: center;
+          margin-bottom: 1rem;
+
+          mat-icon {
+            font-size: 64px;
+            width: 64px;
+            height: 64px;
+            color: #3f51b5;
+          }
+        }
+
+        p {
+          color: #555;
+          line-height: 1.6;
+        }
+      }
+
+      .card-actions {
+        padding: 1rem;
+        text-align: center;
+        border-top: 1px solid #e0e0e0;
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .info-section {
+    margin-top: 3rem;
+
+    mat-card {
+      mat-card-header {
+        margin-bottom: 1rem;
+      }
+
+      mat-card-content {
+        p {
+          margin-bottom: 1rem;
+          color: #555;
+        }
+
+        ul {
+          list-style-position: inside;
+          color: #666;
+
+          li {
+            margin-bottom: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}

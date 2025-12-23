@@ -1,145 +1,44 @@
-<section>
-  <h1>Welcome to Our Website</h1>
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.
-  </p>
+<section class="landing-page">
+  <div class="hero-section">
+    <h1>Welcome to Knowker</h1>
+    <p class="subtitle">Your platform for knowledge and gaming</p>
+  </div>
 
-  <mat-tab-group [(selectedIndex)]="selectedIndex">
-    <!-- TAB 1 -->
-    <mat-tab label="Anforderungen">
-      <div class="tab-content">
-        <h2>Choose Your Options</h2>
-          <div class="flex-column">
-          <mat-form-field appearance="outline">
-            <mat-label>Zielgruppe</mat-label>
-            <mat-select>
-              <mat-option value="Intern">Intern</mat-option>
-              <mat-option value="Partner">Partner</mat-option>
-              <mat-option value="Bürger">Bürger</mat-option>
-            </mat-select>
-          </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Kritikalität/Verfügbarkeit</mat-label>
-              <mat-select>
-                <mat-option value="normal">normal</mat-option>
-                <mat-option value="hoch">hoch</mat-option>
-                <mat-option value="sehr hoch">sehr hoch</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Schutzbedarf/Datenlokalität</mat-label>
-              <mat-select>
-                <mat-option value="normal">normal</mat-option>
-                <mat-option value="hoch">hoch</mat-option>
-                <mat-option value="sehr hoch">sehr hoch</mat-option>
-                <mat-option value="DE lokal">DE lokal</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Skalierung</mat-label>
-              <mat-select>
-                <mat-option value="gering">gering</mat-option>
-                <mat-option value="mittel">mittel</mat-option>
-                <mat-option value="hoch">hoch</mat-option>
-                <mat-option value="Lastspitzen">Lastspitzen</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Servicezeiten</mat-label>
-              <mat-select>
-                <mat-option value="Standard Servicezeiten 8-18 Uhr">Standard Servicezeiten 8-18 Uhr</mat-option>
-                <mat-option value="Erweiterte Servicezeiten 6-22 Uhr">Erweiterte Servicezeiten 6-22 Uhr</mat-option>
-                <mat-option value="Dauerhafte Servicezeiten 24/7">Dauerhafte Servicezeiten 24/7</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+  <div class="content-section">
+    <h2>About Knowker</h2>
+    <p>
+      Knowker is an innovative platform that combines knowledge sharing with interactive gaming experiences.
+      Join our community to explore, learn, and compete with players around the world.
+    </p>
+  </div>
+
+  <div class="features-section">
+    <h2>Features</h2>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <mat-icon>games</mat-icon>
+        <h3>Interactive Games</h3>
+        <p>Engage in exciting games that challenge your knowledge and skills.</p>
       </div>
-      <div class="flex-row">
-        <button mat-raised-button color="primary" (click)="nextStep()">
-          <mat-icon>arrow_forward_ios</mat-icon>
-          Next
-        </button>
+      <div class="feature-item">
+        <mat-icon>school</mat-icon>
+        <h3>Learn & Grow</h3>
+        <p>Expand your knowledge through our comprehensive learning modules.</p>
       </div>
-    </mat-tab>
-
-    <!-- TAB 2 -->
-    <mat-tab label="Erweiterte Einstellungen">
-      <div class="tab-content">
-        <h2>Choose Categories</h2>
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>Interfaces</mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-selection-list>
-              <mat-list-option value="sap">SAP ERP System</mat-list-option>
-              <mat-list-option value="confluence">Confluence</mat-list-option>
-              <mat-list-option value="jira">Jira</mat-list-option>
-              <mat-list-option value="salesforce">Salesforce</mat-list-option>
-            </mat-selection-list>
-          </mat-expansion-panel>
-
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>Databases</mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-selection-list>
-              <mat-list-option value="mysql">MySQL</mat-list-option>
-              <mat-list-option value="postgresql">PostgreSQL</mat-list-option>
-              <mat-list-option value="oracle">Oracle DB</mat-list-option>
-            </mat-selection-list>
-          </mat-expansion-panel>
-
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>Authentication</mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-selection-list>
-              <mat-list-option value="ldap">LDAP</mat-list-option>
-              <mat-list-option value="oauth">OAuth</mat-list-option>
-              <mat-list-option value="saml">SAML</mat-list-option>
-            </mat-selection-list>
-          </mat-expansion-panel>
-
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>Cloud Platforms</mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-checkbox (change)="toggleAllHyperscalers($event.checked)"> Hyperscalers </mat-checkbox>
-            <mat-selection-list #hyperscalers>
-              <mat-list-option value="aws" [(selected)]="selectedHyperscalers.aws">AWS</mat-list-option>
-              <mat-list-option value="azure" [(selected)]="selectedHyperscalers.azure">Azure</mat-list-option>
-              <mat-list-option value="gcp" [(selected)]="selectedHyperscalers.gcp">Google Cloud</mat-list-option>
-            </mat-selection-list>
-            <mat-checkbox (change)="toggleAllSuperscalers($event.checked)"> Superscalers </mat-checkbox>
-            <mat-selection-list #superscaler>
-              <mat-list-option value="Stackit" [(selected)]="selectedHyperscalers.aws">Stackit</mat-list-option>
-              <mat-list-option value="IONOS" [(selected)]="selectedHyperscalers.azure">IONOS</mat-list-option>
-              <mat-list-option value="OVHcloud" [(selected)]="selectedHyperscalers.gcp">OVHcloud</mat-list-option>
-            </mat-selection-list>
-          </mat-expansion-panel>
-        </mat-accordion>
+      <div class="feature-item">
+        <mat-icon>people</mat-icon>
+        <h3>Community</h3>
+        <p>Connect with like-minded individuals and share your experiences.</p>
       </div>
-      <div class="flex-row">
-        <button mat-raised-button color="primary" (click)="nextStep()">
-          <mat-icon>arrow_forward_ios</mat-icon>
-          Next
-        </button>
-      </div>
-    </mat-tab>
+    </div>
+  </div>
 
-    <!-- TAB 3 -->
-    <mat-tab label="Use Case">
-      <div class="flex-column">
-        <div class="tab-content">
-          <h2>Describe Your Use Case</h2>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Your Description</mat-label>
-            <textarea matInput placeholder="Please describe your use case..." rows="6"></textarea>
-          </mat-form-field>
-        </div>
-        <button mat-raised-button color="primary" [routerLink]="['/result']">Submit</button>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
+  <div class="cta-section">
+    <h2>Get Started Today</h2>
+    <p>Join Knowker and start your journey towards knowledge and fun!</p>
+    <div class="button-group">
+      <button mat-raised-button color="primary" [routerLink]="['/registrieren']">Sign Up</button>
+      <button mat-raised-button color="accent" [routerLink]="['/login']">Login</button>
+    </div>
+  </div>
 </section>

@@ -62,7 +62,6 @@ export function tokenGetter() {
     AccountCreationComponent,
     LoginFieldComponent,
     AccountCreationFieldComponent,
-    ResultComponent,
     GamesComponent,
     MyGamesComponent,
     CreateNewGameComponent,

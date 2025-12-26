@@ -4,26 +4,35 @@ Get the rempo application up and running quickly.
 
 ## Prerequisites
 
-- **Node.js** 20+ and npm
-- **Python** 3.12+
-- **pip** package manager
+- kubernetes
 
 ## Quick Setup
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Schlag-den-Suff/rempo.git
-cd rempo
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+helm -n argocd upgrade argocd --install --create-namespace argo/argo-cd \
+  --set global.domain=argocd.rd.localhost \
+  --set configs.params.server\.insecure=true \
+  --set server.ingress.enabled=true
+  
+kubectl get pods -n argocd
+kubectl -n argocd get secret argocd-initial-admin-secret \
+  -o jsonpath="{.data.password}" | base64 -d
+kubectl create namespace knowker-dev
+kubectl create namespace knowker-prod
 ```
 
 ### 2. Start Backend
 
 ```bash
-cd backend
+kubectl apply -f argocd/app-deployment-dev.yaml
+kubectl apply -f argocd/app-deployment-prod.yaml
 
 # Install dependencies
-pip install -r requirements.txt
+kubectl create secret docker-registry ghcr-pull-secret --docker-server=ghcr.io --docker-username=<github-username> --docker-password=<github-key> --docker-email=ffflllooo6@gmail.com -n knowker-prod
 
 # Run migrations
 python manage.py migrate

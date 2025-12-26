@@ -2,9 +2,17 @@
   <mat-sidenav #sidenav mode="over" opened="false">
     <div class="sidenav-content">
       <mat-nav-list>
+        <a mat-list-item class="nav-item" routerLink="/my-games" (click)="closeAll()">
+          <mat-icon>folder</mat-icon>
+          Meine Spiele
+        </a>
         <a mat-list-item class="nav-item" routerLink="/games" (click)="closeAll()">
-          <mat-icon>games</mat-icon>
-          Games
+          <mat-icon>add</mat-icon>
+          Neues Spiel erstellen
+        </a>
+        <a mat-list-item class="nav-item" routerLink="/games" (click)="closeAll()">
+          <mat-icon>question_mark</mat-icon>
+          FAQ
         </a>
       </mat-nav-list>
     </div>

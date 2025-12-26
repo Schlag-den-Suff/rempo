@@ -7,9 +7,11 @@ import {DataPolicyComponent} from './shared/components/data-policy/data-policy.c
 import {LandingPageComponent} from './features/landing-page/landing-page.component';
 import {LoginComponent} from './features/user-management/login/login.component';
 import {AccountCreationComponent} from './features/user-management/account-creation/account-creation.component';
-import {ResultComponent} from './features/result/result.component';
 import {GamesComponent} from './features/games/games.component';
 import {AuthGuard} from './auth/auth.guard';
+import {MyGamesComponent} from './features/my-games/my-games';
+import {GameManagementComponent} from './features/game-management/game-management';
+import {CreateNewGameComponent} from './features/create-new-game/create-new-game';
 
 const routes: Routes = [
   {
@@ -18,7 +20,9 @@ const routes: Routes = [
     children: [
       { path: '', component: LandingPageComponent },
       { path: 'games', component: GamesComponent, canActivate: [AuthGuard] },
-      { path: 'result', component: ResultComponent },
+      { path: 'my-games', component: MyGamesComponent, canActivate: [AuthGuard] },
+      { path: 'game-management', component: GameManagementComponent, canActivate: [AuthGuard] },
+      { path: 'create-new-game', component: CreateNewGameComponent, canActivate: [AuthGuard] },
       {
         path: 'ueber-uns',
         component: AboutUsComponent,

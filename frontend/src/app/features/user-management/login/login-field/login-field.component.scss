@@ -1,0 +1,13 @@
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.form-field {
+  width: 18rem;
+}
+
+#passwordForgotten {
+  color: var(--tertiary-color);
+}

@@ -24,3 +24,11 @@ yarn-error.log*
 *.tmp
 *.temp
 /tmp/
+
+# Node.js
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+build/

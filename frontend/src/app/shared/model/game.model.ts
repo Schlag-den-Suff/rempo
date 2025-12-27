@@ -1,4 +1,4 @@
-import { GameQuestion } from './question.model.ts';
+import { GameQuestion } from './question.model';
 export interface Game {
   game_id: string
   Owner_id: string;
@@ -29,4 +29,8 @@ export interface GamePlayers {
 
 export interface GameSettings {
   type: string;
+  questionsPerPlayer: number;
+  timeLimit?: number; // Time limit in minutes for the game (optional)
+  allowHints: boolean;
+  randomizeQuestions: boolean;
 }

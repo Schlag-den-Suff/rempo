@@ -68,7 +68,7 @@ export class CreateNewGameComponent implements OnInit {
       game_settings: {
         type: formValue.type,
         questionsPerPlayer: formValue.questionsPerPlayer,
-        timeLimit: formValue.timeLimit || undefined,
+        timeLimit: formValue.timeLimit,
         allowHints: formValue.allowHints,
         randomizeQuestions: formValue.randomizeQuestions,
       },
@@ -91,10 +91,11 @@ export class CreateNewGameComponent implements OnInit {
         // Navigate to game management or my games page
         this.router.navigate(['/game-management']);
       },
-      error: (error: unknown) => {
+      error: (error: { error?: string; message?: string }) => {
         // Show error message
+        const errorMessage = error.error || error.message || 'Fehler beim Erstellen des Spiels. Bitte versuchen Sie es erneut.';
         this.snackBar.open(
-          'Fehler beim Erstellen des Spiels. Bitte versuchen Sie es erneut.',
+          errorMessage,
           'X',
           {
             duration: 3000,

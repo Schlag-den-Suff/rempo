@@ -37,7 +37,7 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from '@angular/material/expansion';
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle, MatCardActions} from '@angular/material/card';
 import { GamesComponent } from './features/games/games.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MyGamesComponent} from './features/my-games/my-games';
@@ -106,6 +106,7 @@ export function tokenGetter() {
     MatCard,
     MatDivider,
     MatCardContent,
+    MatCardActions,
     MatSnackBarModule,
   ],
   providers: [

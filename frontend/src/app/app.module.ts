@@ -43,6 +43,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MyGamesComponent} from './features/my-games/my-games';
 import {CreateNewGameComponent} from './features/create-new-game/create-new-game';
 import {GameManagementComponent} from './features/game-management/game-management';
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
+import { AddUser } from './shared/components/add-user/add-user';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -64,8 +66,7 @@ export function tokenGetter() {
     AccountCreationFieldComponent,
     GamesComponent,
     MyGamesComponent,
-    CreateNewGameComponent,
-    GameManagementComponent
+    GameManagementComponent,
   ],
   imports: [
     JwtModule.forRoot({
@@ -108,6 +109,9 @@ export function tokenGetter() {
     MatCardContent,
     MatCardActions,
     MatSnackBarModule,
+    MatDatepickerToggle,
+    MatDatepicker,
+    MatDatepickerInput,
   ],
   providers: [
     provideHttpClient(),

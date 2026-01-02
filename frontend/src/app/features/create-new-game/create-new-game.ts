@@ -1,19 +1,69 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { GameService } from '../../shared/services/game.service';
-import { GameStatus, Game } from '../../shared/model/game.model';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { provideNativeDateAdapter } from '@angular/material/core';
+
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import {GameService} from '../../shared/services/game.service';
+import {Game, GameStatus} from '../../shared/model/game.model';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
+  MatTable
+} from '@angular/material/table';
+import {User} from '../../shared/model/user.model';
+import {AddUser} from '../../shared/components/add-user/add-user';
+import {MatDialog} from '@angular/material/dialog.d';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-create-new-game',
-  standalone: false,
+  standalone: true,
+  providers: [provideNativeDateAdapter()],
+  imports: [
+    ReactiveFormsModule,
+    RouterModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatIconModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatColumnDef,
+    MatHeaderCell,
+    MatCell,
+    MatTable,
+    MatCellDef,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatRow,
+    MatRowDef,
+    MatHeaderRowDef
+  ],
   templateUrl: './create-new-game.html',
   styleUrl: './create-new-game.scss',
 })
 export class CreateNewGameComponent implements OnInit {
+
   // Form group for creating a new game
+  userID: string = '';
   createGameForm!: FormGroup;
+  displayedColumns: string[] = ['username', 'email', 'role', 'delete'];
+  tableData: User[] = [];
+  subscriptions: Subscription[] = []; // Subscriptions for managing observables.
 
   /**
    * Constructor initializes required services for form creation, navigation, and notifications.
@@ -22,18 +72,22 @@ export class CreateNewGameComponent implements OnInit {
    * @param gameService Service for handling game-related operations.
    * @param router Angular Router for navigation.
    * @param snackBar Angular Material Snackbar for user notifications.
+   * @param dialog
    */
   constructor(
     private fb: FormBuilder,
     private gameService: GameService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) {}
 
   /**
    * Initializes the form with validators for all fields.
    */
   ngOnInit(): void {
+    this.userID = localStorage.getItem('user_id') || '';
+    console.log('UserID:', this.userID);
     this.createGameForm = this.fb.group({
       // Game name field with required validation
       game_name: ['', [Validators.required, Validators.minLength(3)]],
@@ -48,6 +102,8 @@ export class CreateNewGameComponent implements OnInit {
       // Randomize questions toggle
       randomizeQuestions: [true],
     });
+
+    //this.setupUserTable();
   }
 
   /**
@@ -113,6 +169,42 @@ export class CreateNewGameComponent implements OnInit {
    */
   onCancel(): void {
     this.router.navigate(['/my-games']);
+  }
+
+  private setupUserTable() {
+    this.tableData.push({
+      userId: 'asdf',
+      username: 'wrwasdfg',
+      email: 'ertzwe',
+      first_name: 'qvsadgg',
+      last_name: 'dfghshetr'
+    } as User)
+    this.tableData.push({
+      userId: 'wetwtew',
+      username: 'wrwasdfg',
+      email: 'ertzwe',
+      first_name: 'qvsadgg',
+      last_name: 'dfghshetr'
+    } as User)
+  }
+
+  removePlayer(element: User) {
+    console.log('Remove player', element);
+  }
+
+  onAddUser() {
+    const dialogRef = this.dialog.open(AddUser, {
+    });
+    this.subscriptions.push(
+      dialogRef
+        .afterClosed()
+        .subscribe((result: User | undefined) => {
+          if (result) {
+            this.tableData.push(result);
+            this.tableData = [...this.tableData];
+          }
+        })
+    );
   }
 }
 

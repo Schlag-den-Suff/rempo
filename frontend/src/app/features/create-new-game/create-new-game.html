@@ -19,24 +19,81 @@
               placeholder="Geben Sie einen Namen für Ihr Spiel ein"
               required>
             <mat-icon matPrefix>games</mat-icon>
-            <mat-error *ngIf="createGameForm.get('game_name')?.hasError('required')">
-              Spielname ist erforderlich
-            </mat-error>
-            <mat-error *ngIf="createGameForm.get('game_name')?.hasError('minlength')">
-              Spielname muss mindestens 3 Zeichen lang sein
-            </mat-error>
+            @if (createGameForm.get('game_name')?.hasError('required')){
+              <mat-error>
+                Spielname ist erforderlich
+              </mat-error>
+            }
+
+            @if (createGameForm.get('game_name')?.hasError('minlength')){
+              <mat-error>
+                Spielname muss mindestens 3 Zeichen lang sein
+              </mat-error>
+            }
+
+
           </mat-form-field>
 
-          <!-- Game Type -->
+          <!-- Planned Date of the Game -->
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Spieltyp</mat-label>
-            <mat-select formControlName="type" required>
-              <mat-option value="Quiz">Quiz</mat-option>
-              <mat-option value="Trivia">Trivia</mat-option>
-              <mat-option value="Challenge">Challenge</mat-option>
-            </mat-select>
+            <mat-label>Geplanntes Spieldatum</mat-label>
+            <input matInput [matDatepicker]="picker">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
             <mat-icon matPrefix>category</mat-icon>
           </mat-form-field>
+
+          <!-- Table to add and remove Player with whom you want to play -->
+          @if (tableData.length > 0) {
+            <table mat-table [dataSource]="tableData" class="mat-elevation-z8">
+
+              <!--- Note that these columns can be defined in any order.
+                    The actual rendered columns are set as a property on the row definition" -->
+
+              <!-- Position Column -->
+              <ng-container matColumnDef="username">
+                <th mat-header-cell *matHeaderCellDef> Benutzername </th>
+                <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+              </ng-container>
+
+              <!-- Weight Column -->
+              <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef> Rolle </th>
+                <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+              </ng-container>
+
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef> Löschen </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button color="warn" (click)="removePlayer(element)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          } @else {
+          <div class="no-data-message">
+            <span>Noch keine Nutzer Hinzugefügt</span>
+          </div>
+        }
+
+          <!-- Add Player Section -->
+          <button class="add-button dark-style" mat-raised-button (click)="onAddUser()">
+            Nutzer hinzufügen
+          </button>
+
+
 
           <!-- Settings Section -->
           <div class="settings-section">
@@ -53,56 +110,28 @@
                 type="number"
                 formControlName="questionsPerPlayer"
                 min="1"
-                max="50"
+                max="255"
                 required>
               <mat-icon matPrefix>help_outline</mat-icon>
-              <mat-hint>Anzahl der Fragen, die jeder Spieler beantworten muss (1-50)</mat-hint>
-              <mat-error *ngIf="createGameForm.get('questionsPerPlayer')?.hasError('required')">
-                Anzahl der Fragen ist erforderlich
-              </mat-error>
-              <mat-error *ngIf="createGameForm.get('questionsPerPlayer')?.hasError('min')">
-                Mindestens 1 Frage erforderlich
-              </mat-error>
-              <mat-error *ngIf="createGameForm.get('questionsPerPlayer')?.hasError('max')">
-                Maximum 50 Fragen erlaubt
-              </mat-error>
+              <mat-hint>Anzahl der Fragen, die jeder Spieler hinzufügen muss (1-255)</mat-hint>
+              @if (createGameForm.get('questionsPerPlayer')?.hasError('required')){
+                <mat-error>
+                  Anzahl der Fragen ist erforderlich
+                </mat-error>
+              }
+              @if (createGameForm.get('questionsPerPlayer')?.hasError('min')){
+                <mat-error>
+                  Mindestens 1 Frage erforderlich
+                </mat-error>
+              }
+              @if (createGameForm.get('questionsPerPlayer')?.hasError('max')){
+                <mat-error>
+                  Maximum 255 Fragen erlaubt
+                </mat-error>
+              }
+
             </mat-form-field>
 
-            <!-- Time Limit -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Zeitlimit (Minuten)</mat-label>
-              <input
-                matInput
-                type="number"
-                formControlName="timeLimit"
-                min="1"
-                max="180"
-                placeholder="Optional">
-              <mat-icon matPrefix>timer</mat-icon>
-              <mat-hint>Gesamtzeit für das Spiel in Minuten (optional, 1-180)</mat-hint>
-            </mat-form-field>
-
-            <!-- Allow Hints Checkbox -->
-            <div class="checkbox-field">
-              <mat-checkbox formControlName="allowHints">
-                <div class="checkbox-content">
-                  <mat-icon>lightbulb</mat-icon>
-                  <span>Hinweise erlauben</span>
-                </div>
-              </mat-checkbox>
-              <p class="checkbox-hint">Spieler können während des Spiels Hinweise nutzen</p>
-            </div>
-
-            <!-- Randomize Questions Checkbox -->
-            <div class="checkbox-field">
-              <mat-checkbox formControlName="randomizeQuestions">
-                <div class="checkbox-content">
-                  <mat-icon>shuffle</mat-icon>
-                  <span>Fragen zufällig mischen</span>
-                </div>
-              </mat-checkbox>
-              <p class="checkbox-hint">Fragen werden für jeden Spieler in zufälliger Reihenfolge angezeigt</p>
-            </div>
           </div>
         </form>
       </mat-card-content>

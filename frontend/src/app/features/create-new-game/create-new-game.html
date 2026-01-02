@@ -66,7 +66,7 @@
               <!-- Weight Column -->
               <ng-container matColumnDef="role">
                 <th mat-header-cell *matHeaderCellDef> Rolle </th>
-                <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+                <td mat-cell *matCellDef="let element; let i = index"> {{getRoleDisplay(i)}} </td>
               </ng-container>
 
               <!-- Symbol Column -->
@@ -89,9 +89,36 @@
         }
 
           <!-- Add Player Section -->
-          <button class="add-button dark-style" mat-raised-button (click)="onAddUser()">
-            Nutzer hinzufügen
-          </button>
+          <div class="add-players-section">
+            <h3 class="section-title">
+              <mat-icon>group_add</mat-icon>
+              Spieler hinzufügen
+            </h3>
+            
+            <!-- Friends List Expansion Panel -->
+            <mat-expansion-panel [expanded]="showFriendsList" (opened)="showFriendsList = true" (closed)="showFriendsList = false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon>people</mat-icon>
+                  Freunde hinzufügen
+                </mat-panel-title>
+                <mat-panel-description>
+                  Wähle aus deiner Freundesliste
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              
+              <app-select-friends
+                [excludeUserIds]="getExcludedUserIds()"
+                (friendSelected)="onFriendSelected($event)">
+              </app-select-friends>
+            </mat-expansion-panel>
+
+            <!-- Add Other User Button -->
+            <button class="add-button secondary-style" mat-raised-button (click)="onAddOtherUser()">
+              <mat-icon>person_add</mat-icon>
+              Anderen Nutzer hinzufügen
+            </button>
+          </div>
 
 
 

@@ -1,0 +1,56 @@
+<div class="select-friends-container">
+  <div class="search-section">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Freunde durchsuchen</mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="filterFriends()"
+        placeholder="Name oder E-Mail eingeben">
+      <mat-icon matPrefix>search</mat-icon>
+      @if (searchTerm) {
+        <button mat-icon-button matSuffix (click)="clearSearch()">
+          <mat-icon>clear</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Freunde werden geladen...</p>
+    </div>
+  } @else if (filteredFriends.length > 0) {
+    <mat-list class="friends-list">
+      @for (friend of filteredFriends; track friend.userId) {
+        <mat-list-item class="friend-item">
+          <div class="friend-info">
+            <div class="friend-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+            <div class="friend-details">
+              <span class="friend-name">{{ friend.first_name }} {{ friend.last_name }}</span>
+              <span class="friend-username">@{{ friend.username }}</span>
+              <span class="friend-email">{{ friend.email }}</span>
+            </div>
+          </div>
+          <button mat-icon-button color="primary" (click)="onSelectFriend(friend)">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </mat-list-item>
+      }
+    </mat-list>
+  } @else if (friends.length > 0 && filteredFriends.length === 0) {
+    <div class="no-results">
+      <mat-icon>search_off</mat-icon>
+      <p>Keine Freunde gefunden für "{{ searchTerm }}"</p>
+    </div>
+  } @else {
+    <div class="no-friends">
+      <mat-icon>people_outline</mat-icon>
+      <p>Du hast noch keine Freunde hinzugefügt</p>
+      <small>Verwende die Schaltfläche "Anderen Nutzer hinzufügen", um jemanden zu suchen</small>
+    </div>
+  }
+</div>

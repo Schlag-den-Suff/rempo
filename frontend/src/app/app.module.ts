@@ -37,12 +37,14 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from '@angular/material/expansion';
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle, MatCardActions} from '@angular/material/card';
 import { GamesComponent } from './features/games/games.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MyGamesComponent} from './features/my-games/my-games';
 import {CreateNewGameComponent} from './features/create-new-game/create-new-game';
 import {GameManagementComponent} from './features/game-management/game-management';
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
+import { AddUser } from './shared/components/add-user/add-user';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -64,8 +66,7 @@ export function tokenGetter() {
     AccountCreationFieldComponent,
     GamesComponent,
     MyGamesComponent,
-    CreateNewGameComponent,
-    GameManagementComponent
+    GameManagementComponent,
   ],
   imports: [
     JwtModule.forRoot({
@@ -106,7 +107,11 @@ export function tokenGetter() {
     MatCard,
     MatDivider,
     MatCardContent,
+    MatCardActions,
     MatSnackBarModule,
+    MatDatepickerToggle,
+    MatDatepicker,
+    MatDatepickerInput,
   ],
   providers: [
     provideHttpClient(),

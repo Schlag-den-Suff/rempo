@@ -154,7 +154,10 @@ export class AuthService {
     if (userStr) {
       try {
         return JSON.parse(userStr);
-      } catch {
+      } catch (error) {
+        // Clear invalid data
+        console.error('Failed to parse stored user data:', error);
+        localStorage.removeItem('currentUser');
         return null;
       }
     }

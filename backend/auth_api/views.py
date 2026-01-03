@@ -145,18 +145,3 @@ def user_info(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
     }, status=status.HTTP_200_OK)
-
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def token_refresh(request):
-    """
-    Refresh access token using refresh token.
-    Expected payload:
-    {
-        "refresh": "refresh_token_string"
-    }
-    """
-    from rest_framework_simplejwt.views import TokenRefreshView
-    view = TokenRefreshView.as_view()
-    return view(request._request)

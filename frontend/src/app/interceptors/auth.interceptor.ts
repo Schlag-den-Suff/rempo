@@ -43,8 +43,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(clonedReq);
           }),
           catchError(refreshError => {
-            // If refresh fails, clear auth data and redirect to login
-            // You might want to inject Router here to redirect
+            // If refresh fails, clear auth data
+            // Note: Redirecting to login should be handled by a guard or component
+            // that subscribes to the currentUser$ observable
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('currentUser');
             return throwError(() => refreshError);
           })
         );

@@ -1,1 +1,102 @@
-<p>add-user works!</p>
+<div class="add-user-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>person_add</mat-icon>
+    Nutzer hinzufügen
+  </h2>
+
+  <mat-dialog-content>
+    <div class="search-section">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>E-Mail oder Benutzername</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch()"
+          placeholder="E-Mail oder Benutzername eingeben"
+          [disabled]="searching">
+        <mat-icon matPrefix>search</mat-icon>
+        @if (searchTerm && !searching) {
+          <button mat-icon-button matSuffix (click)="onClearSearch()">
+            <mat-icon>clear</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSearch()"
+        [disabled]="!searchTerm.trim() || searching"
+        class="search-button">
+        <mat-icon>search</mat-icon>
+        Suchen
+      </button>
+    </div>
+
+    @if (searching) {
+      <div class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Suche läuft...</p>
+      </div>
+    }
+
+    @if (foundUser) {
+      <div class="user-found">
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <h3>Nutzer gefunden!</h3>
+        <div class="user-card">
+          <div class="user-avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="user-info">
+            <p class="user-name">{{ foundUser.first_name }} {{ foundUser.last_name }}</p>
+            <p class="user-username">@{{ foundUser.username }}</p>
+            <p class="user-email">{{ foundUser.email }}</p>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (notFound && !showInvitePrompt) {
+      <div class="not-found">
+        <mat-icon class="error-icon">person_search</mat-icon>
+        <p>Kein Nutzer mit "{{ searchTerm }}" gefunden.</p>
+        <small>Bitte überprüfen Sie die Eingabe oder versuchen Sie eine andere Suche.</small>
+      </div>
+    }
+
+    @if (showInvitePrompt) {
+      <div class="invite-prompt">
+        <mat-icon class="info-icon">email</mat-icon>
+        <h3>Nutzer nicht gefunden</h3>
+        <p>Die E-Mail-Adresse <strong>{{ searchTerm }}</strong> existiert noch nicht in unserem System.</p>
+        <p>Möchten Sie eine Einladung an diese E-Mail-Adresse senden?</p>
+        <p class="invite-description">
+          Der Empfänger erhält eine E-Mail mit einer Einladung, sich bei Rempo zu registrieren
+          und diesem Spiel beizutreten.
+        </p>
+      </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">
+      Abbrechen
+    </button>
+    
+    @if (foundUser) {
+      <button mat-raised-button color="primary" (click)="onAddUser()">
+        <mat-icon>add</mat-icon>
+        Nutzer hinzufügen
+      </button>
+    }
+    
+    @if (showInvitePrompt) {
+      <button mat-raised-button color="accent" (click)="onSendInvite()" [disabled]="searching">
+        <mat-icon>send</mat-icon>
+        Einladung senden
+      </button>
+    }
+  </mat-dialog-actions>
+</div>
+

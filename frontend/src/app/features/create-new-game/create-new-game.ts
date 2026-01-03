@@ -12,7 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import {GameService} from '../../shared/services/game.service';
-import {Game, GameStatus} from '../../shared/model/game.model';
+import {Game, GameStatus, PlayerRole} from '../../shared/model/game.model';
 import {
   MatCell,
   MatCellDef,
@@ -24,14 +24,18 @@ import {
 } from '@angular/material/table';
 import {User} from '../../shared/model/user.model';
 import {AddUser} from '../../shared/components/add-user/add-user';
-import {MatDialog} from '@angular/material/dialog.d';
+import {MatDialog} from '@angular/material/dialog';
 import {Subscription} from 'rxjs';
+import {SelectFriendsComponent} from '../../shared/components/select-friends/select-friends';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-create-new-game',
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     RouterModule,
     MatFormFieldModule,
@@ -51,7 +55,9 @@ import {Subscription} from 'rxjs';
     MatHeaderRow,
     MatRow,
     MatRowDef,
-    MatHeaderRowDef
+    MatHeaderRowDef,
+    MatExpansionModule,
+    SelectFriendsComponent
   ],
   templateUrl: './create-new-game.html',
   styleUrl: './create-new-game.scss',
@@ -64,6 +70,7 @@ export class CreateNewGameComponent implements OnInit {
   displayedColumns: string[] = ['username', 'email', 'role', 'delete'];
   tableData: User[] = [];
   subscriptions: Subscription[] = []; // Subscriptions for managing observables.
+  showFriendsList: boolean = false;
 
   /**
    * Constructor initializes required services for form creation, navigation, and notifications.
@@ -102,8 +109,6 @@ export class CreateNewGameComponent implements OnInit {
       // Randomize questions toggle
       randomizeQuestions: [true],
     });
-
-    //this.setupUserTable();
   }
 
   /**
@@ -128,7 +133,10 @@ export class CreateNewGameComponent implements OnInit {
         allowHints: formValue.allowHints,
         randomizeQuestions: formValue.randomizeQuestions,
       },
-      game_players: [], // Empty at the beginning
+      game_players: this.tableData.map((user, index) => ({
+        user_id: user.userId,
+        role: index === 0 ? PlayerRole.ADMIN : PlayerRole.USER
+      })),
       game_questions: [], // Empty at the beginning
     };
 
@@ -171,40 +179,91 @@ export class CreateNewGameComponent implements OnInit {
     this.router.navigate(['/my-games']);
   }
 
-  private setupUserTable() {
-    this.tableData.push({
-      userId: 'asdf',
-      username: 'wrwasdfg',
-      email: 'ertzwe',
-      first_name: 'qvsadgg',
-      last_name: 'dfghshetr'
-    } as User)
-    this.tableData.push({
-      userId: 'wetwtew',
-      username: 'wrwasdfg',
-      email: 'ertzwe',
-      first_name: 'qvsadgg',
-      last_name: 'dfghshetr'
-    } as User)
+  /**
+   * Remove a player from the table
+   */
+  removePlayer(element: User): void {
+    this.tableData = this.tableData.filter(user => user.userId !== element.userId);
   }
 
-  removePlayer(element: User) {
-    console.log('Remove player', element);
-  }
-
-  onAddUser() {
+  /**
+   * Open the add user dialog for non-friend users
+   */
+  onAddOtherUser(): void {
     const dialogRef = this.dialog.open(AddUser, {
+      width: '500px',
+      maxWidth: '90vw'
     });
     this.subscriptions.push(
       dialogRef
         .afterClosed()
         .subscribe((result: User | undefined) => {
-          if (result) {
+          if (result && !this.isUserAlreadyAdded(result.userId)) {
             this.tableData.push(result);
             this.tableData = [...this.tableData];
+            this.snackBar.open(
+              `${result.username} wurde hinzugefügt`,
+              'X',
+              { duration: 2000 }
+            );
+          } else if (result && this.isUserAlreadyAdded(result.userId)) {
+            this.snackBar.open(
+              `${result.username} ist bereits hinzugefügt`,
+              'X',
+              { duration: 2000 }
+            );
           }
         })
     );
+  }
+
+  /**
+   * Handle friend selection from friends list
+   */
+  onFriendSelected(friend: User): void {
+    if (!this.isUserAlreadyAdded(friend.userId)) {
+      this.tableData.push(friend);
+      this.tableData = [...this.tableData];
+      this.snackBar.open(
+        `${friend.username} wurde hinzugefügt`,
+        'X',
+        { duration: 2000 }
+      );
+    } else {
+      this.snackBar.open(
+        `${friend.username} ist bereits hinzugefügt`,
+        'X',
+        { duration: 2000 }
+      );
+    }
+  }
+
+  /**
+   * Toggle friends list visibility
+   */
+  toggleFriendsList(): void {
+    this.showFriendsList = !this.showFriendsList;
+  }
+
+  /**
+   * Get list of user IDs that are already added
+   */
+  getExcludedUserIds(): string[] {
+    return this.tableData.map(user => user.userId);
+  }
+
+  /**
+   * Check if user is already added to the table
+   */
+  private isUserAlreadyAdded(userId: string): boolean {
+    return this.tableData.some(user => user.userId === userId);
+  }
+
+  /**
+   * Get role display text for a user
+   */
+  getRoleDisplay(index: number): string {
+    return index === 0 ? PlayerRole.ADMIN : PlayerRole.USER;
   }
 }
 
